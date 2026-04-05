@@ -2,21 +2,27 @@
 <html>
 <head>
     <title>Disease Predictor</title>
+
+    <!-- IMPORTANT FOR MOBILE -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <style>
         body {
             margin: 0;
             font-family: 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #74ebd5, #ACB6E5);
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 10px;
         }
 
         .card {
             background: white;
-            padding: 30px;
-            width: 420px;
+            padding: 25px;
+            width: 100%;
+            max-width: 420px;
             border-radius: 15px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             text-align: center;
@@ -26,27 +32,31 @@
         h1 {
             margin-bottom: 20px;
             color: #2c3e50;
+            font-size: 22px;
         }
 
         select {
-            padding: 10px;
-            width: 65%;
+            padding: 12px;
+            width: 60%;
             border-radius: 8px;
             border: 1px solid #ccc;
-            margin-right: 10px;
+            font-size: 14px;
         }
 
         button {
-            padding: 10px 15px;
+            padding: 12px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             transition: 0.3s;
+            font-size: 14px;
         }
 
         .add-btn {
             background-color: #3498db;
             color: white;
+            width: 100%;
+            margin-top: 10px;
         }
 
         .predict-btn {
@@ -54,33 +64,61 @@
             color: white;
             width: 100%;
             margin-top: 15px;
+            font-size: 16px;
         }
 
         .remove-btn {
             background-color: #e74c3c;
             color: white;
+            margin-left: 8px;
         }
 
         button:hover {
-            transform: scale(1.05);
+            transform: scale(1.03);
             opacity: 0.9;
         }
 
         .symptom-row {
             margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         #result {
             margin-top: 20px;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             color: #2c3e50;
         }
 
         #loading {
             display: none;
-            color: #555;
             margin-top: 10px;
+            font-size: 14px;
+        }
+
+        /* 📱 MOBILE SPECIFIC */
+        @media (max-width: 480px) {
+
+            h1 {
+                font-size: 18px;
+            }
+
+            select {
+                width: 65%;
+                font-size: 13px;
+            }
+
+            button {
+                font-size: 13px;
+                padding: 10px;
+            }
+
+            .card {
+                padding: 20px;
+                border-radius: 12px;
+            }
         }
 
         @keyframes fadeIn {
