@@ -10,7 +10,7 @@
         body {
             margin: 0;
             font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+            background:  #1a2760;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -19,7 +19,7 @@
         }
 
         .card {
-            background: white;
+            background: rgb(224, 223, 223);
             padding: 25px;
             width: 100%;
             max-width: 420px;
@@ -31,7 +31,7 @@
 
         h1 {
             margin-bottom: 20px;
-            color: #2c3e50;
+            color: #5c8ab9;
             font-size: 22px;
         }
 
@@ -60,7 +60,7 @@
         }
 
         .predict-btn {
-            background-color: #2ecc71;
+            background-color: #b91919;
             color: white;
             width: 100%;
             margin-top: 15px;
@@ -68,7 +68,7 @@
         }
 
         .remove-btn {
-            background-color: #e74c3c;
+            background-color: #b6685f;
             color: white;
             margin-left: 8px;
         }
@@ -131,7 +131,7 @@
 <body>
 
 <div class="card">
-    <h1>🩺 Disease Predictor</h1>
+    <h1>Disease Predictor</h1>
 
     <div id="symptom-container"></div>
 
@@ -139,7 +139,7 @@
 
     <button class="predict-btn" onclick="predictDisease()">Predict</button>
 
-    <div id="loading">⏳ Predicting...</div>
+    <div id="loading"> Predicting...</div>
 
     <div id="result"></div>
 </div>
