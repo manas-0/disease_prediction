@@ -1,80 +1,118 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Disease Prediction System</title>
+    <title>Disease Predictor</title>
     <style>
         body {
-            font-family: Arial;
-            text-align: center;
-            margin-top: 40px;
-            background-color: #f5f7fa;
-        }
-
-        h1 {
-            color: #333;
-        }
-
-        select, button {
-            padding: 10px;
-            margin: 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        button {
-            cursor: pointer;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        #symptom-container {
-            margin-bottom: 20px;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .card {
             background: white;
-            padding: 20px;
-            width: 400px;
-            margin: auto;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            width: 420px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        select {
+            padding: 10px;
+            width: 65%;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .add-btn {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .predict-btn {
+            background-color: #2ecc71;
+            color: white;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .remove-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        .symptom-row {
+            margin-bottom: 10px;
         }
 
         #result {
             margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
             color: #2c3e50;
+        }
+
+        #loading {
+            display: none;
+            color: #555;
+            margin-top: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
+
 <body>
 
-    <div class="card">
-        <h1>Disease Prediction</h1>
+<div class="card">
+    <h1>🩺 Disease Predictor</h1>
 
-        <div id="symptom-container"></div>
+    <div id="symptom-container"></div>
 
-        <button onclick="addSymptom()">+ Add Symptom</button>
-        <br><br>
+    <button class="add-btn" onclick="addSymptom()">+ Add Symptom</button>
 
-        <button onclick="predictDisease()">Predict</button>
+    <button class="predict-btn" onclick="predictDisease()">Predict</button>
 
-        <h2 id="result"></h2>
-    </div>
+    <div id="loading">⏳ Predicting...</div>
+
+    <div id="result"></div>
+</div>
 
 <script>
     let symptomsData = [];
 
-    // Load symptoms
     async function loadSymptoms() {
         let res = await fetch("/symptoms");
         symptomsData = await res.json();
-
-        addSymptom(); // initial dropdown
+        addSymptom();
     }
 
     function createDropdown() {
@@ -83,7 +121,7 @@
         symptomsData.forEach(symptom => {
             let option = document.createElement("option");
             option.value = symptom;
-            option.text = symptom;
+            option.text = symptom.replace(/_/g, " ");
             select.appendChild(option);
         });
 
@@ -94,16 +132,15 @@
         let container = document.getElementById("symptom-container");
 
         let div = document.createElement("div");
+        div.className = "symptom-row";
 
         let dropdown = createDropdown();
 
         let removeBtn = document.createElement("button");
-        removeBtn.innerText = "Remove";
-        removeBtn.style.backgroundColor = "#e74c3c";
+        removeBtn.innerText = "✖";
+        removeBtn.className = "remove-btn";
 
-        removeBtn.onclick = () => {
-            container.removeChild(div);
-        };
+        removeBtn.onclick = () => container.removeChild(div);
 
         div.appendChild(dropdown);
         div.appendChild(removeBtn);
@@ -115,22 +152,22 @@
         let selects = document.querySelectorAll("select");
         let selectedSymptoms = [];
 
-        selects.forEach(s => {
-            selectedSymptoms.push(s.value);
-        });
+        selects.forEach(s => selectedSymptoms.push(s.value));
+
+        document.getElementById("loading").style.display = "block";
+        document.getElementById("result").innerText = "";
 
         let res = await fetch("/predict", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify({ symptoms: selectedSymptoms })
         });
 
         let data = await res.json();
 
+        document.getElementById("loading").style.display = "none";
         document.getElementById("result").innerText =
-            "Predicted Disease: " + data.disease;
+            "🧾 Prediction: " + data.disease;
     }
 
     loadSymptoms();
