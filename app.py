@@ -1,5 +1,4 @@
-from flask import Flask, request, jsonify
-from flask import render_template
+from flask import Flask, request, jsonify, render_template
 import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
@@ -7,7 +6,10 @@ from sklearn.preprocessing import LabelEncoder
 
 app = Flask(__name__)
 
-# LOAD DATA (same as your code)
+# =========================
+# LOAD & TRAIN MODEL
+# =========================
+
 train_data = pd.read_csv("Training.csv")
 
 if 'Unnamed: 133' in train_data.columns:
@@ -27,7 +29,10 @@ model.fit(X, y)
 # Get all symptoms
 symptoms_list = list(X.columns)
 
-# Prediction function
+# =========================
+# PREDICTION FUNCTION
+# =========================
+
 def predict_from_symptoms(symptom_names):
     input_data = [0] * len(X.columns)
 
@@ -39,25 +44,30 @@ def predict_from_symptoms(symptom_names):
     prediction = model.predict([input_data])
     return le.inverse_transform(prediction)[0]
 
-# API endpoint
-@app.route('/predict', methods=['POST'])
+# =========================
+# ROUTES
+# =========================
 
+@app.route('/')
+def home():
+    return render_template("index.html")
+
+@app.route('/symptoms', methods=['GET'])
+def get_symptoms():
+    return jsonify(symptoms_list)
+
+@app.route('/predict', methods=['POST'])
 def predict():
-    data = request.json
+    data = request.get_json()
     symptoms = data.get("symptoms", [])
 
     result = predict_from_symptoms(symptoms)
 
     return jsonify({"disease": result})
 
-# endpoint to send symptoms list to UI
-@app.route('/symptoms', methods=['GET'])
-def get_symptoms():
-    return jsonify(symptoms_list)
-
-@app.route('/')
-def home():
-    return render_template("index.html")
+# =========================
+# RUN SERVER
+# =========================
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host="0.0.0.0", port=10000)

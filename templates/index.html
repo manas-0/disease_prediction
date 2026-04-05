@@ -7,38 +7,74 @@
             font-family: Arial;
             text-align: center;
             margin-top: 40px;
+            background-color: #f5f7fa;
         }
+
+        h1 {
+            color: #333;
+        }
+
         select, button {
             padding: 10px;
             margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
         }
+
+        button {
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
         #symptom-container {
             margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            width: 400px;
+            margin: auto;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+
+        #result {
+            margin-top: 20px;
+            color: #2c3e50;
         }
     </style>
 </head>
 <body>
 
-    <h1>Disease Prediction System</h1>
+    <div class="card">
+        <h1>Disease Prediction</h1>
 
-    <div id="symptom-container"></div>
+        <div id="symptom-container"></div>
 
-    <button onclick="addSymptom()">+ Add Symptom</button>
-    <br><br>
+        <button onclick="addSymptom()">+ Add Symptom</button>
+        <br><br>
 
-    <button onclick="predictDisease()">Predict</button>
+        <button onclick="predictDisease()">Predict</button>
 
-    <h2 id="result"></h2>
+        <h2 id="result"></h2>
+    </div>
 
 <script>
     let symptomsData = [];
 
-    // Load symptoms from backend
+    // Load symptoms
     async function loadSymptoms() {
-        let res = await fetch("http://127.0.0.1:5000/symptoms");
+        let res = await fetch("/symptoms");
         symptomsData = await res.json();
 
-        addSymptom(); // add first dropdown
+        addSymptom(); // initial dropdown
     }
 
     function createDropdown() {
@@ -56,8 +92,23 @@
 
     function addSymptom() {
         let container = document.getElementById("symptom-container");
-        container.appendChild(createDropdown());
-        container.appendChild(document.createElement("br"));
+
+        let div = document.createElement("div");
+
+        let dropdown = createDropdown();
+
+        let removeBtn = document.createElement("button");
+        removeBtn.innerText = "Remove";
+        removeBtn.style.backgroundColor = "#e74c3c";
+
+        removeBtn.onclick = () => {
+            container.removeChild(div);
+        };
+
+        div.appendChild(dropdown);
+        div.appendChild(removeBtn);
+
+        container.appendChild(div);
     }
 
     async function predictDisease() {
